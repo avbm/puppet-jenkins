@@ -25,8 +25,8 @@ class jenkins::cli::config(
     $gem_provider = 'pe_gem'
   } elsif $::puppetversion
       and (versioncmp($::puppetversion, '4.0.0') >= 0)
-      and $::rubysitedir
-      and ('/opt/puppetlabs/puppet/lib/ruby' in $::rubysitedir) {
+      and $facts['ruby']['sitedir']
+      and ('/opt/puppetlabs/puppet/lib/ruby' in $facts['ruby']['sitedir']) {
     # AIO puppet
     $gem_provider = 'puppet_gem'
   } else {
@@ -49,7 +49,7 @@ class jenkins::cli::config(
     }
 
     # allow this class to be included when not running as root
-    if $::id == 'root' {
+    if $facts['identitiy']['user'] == 'root' {
       File[$ssh_private_key] {
         # the owner/group should probably be set externally and retrieved if
         # present in the manfiest. At present, there is no authoritative place
@@ -72,7 +72,7 @@ class jenkins::cli::config(
     }
 
     # allow this class to be included when not running as root
-    if $::id == 'root' {
+    if $facts['identity']['user'] == 'root' {
       File[$cli_password_file] {
         # the owner/group should probably be set externally and retrieved if
         # present in the manfiest. At present, there is no authoritative place
